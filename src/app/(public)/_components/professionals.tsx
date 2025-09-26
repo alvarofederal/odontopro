@@ -22,7 +22,8 @@ export function Professionals() {
         </h2>
 
         <section
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        >
 
           <Card className="overflow-hidden">
             <CardContent className="p-0">
@@ -32,7 +33,8 @@ export function Professionals() {
                     src={fotoImg}
                     alt="Foto da clinica"
                     fill
-                    className="object-cover"/>
+                    className="object-cover"
+                  />
                 </div>
               </div>
 
@@ -52,7 +54,8 @@ export function Professionals() {
 
                 <Link
                   href="/clinica/123"
-                  className="w-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center py-2 rounded-md text-sm md:text-base font-medium">
+                  className="w-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center py-2 rounded-md text-sm md:text-base font-medium"
+                >
                   Agendar horário
                   <ArrowRight className="ml-2" />
                 </Link>
@@ -60,8 +63,14 @@ export function Professionals() {
             </CardContent>
           </Card>
 
+
+
+
         </section>
+
+
       </div>
+
     </section>
   )
 } 
