@@ -4,21 +4,21 @@ import {useForm} from "react-hook-form"
 import {Button} from "@/components/ui/button"
 
 const profileSchema = z.object({
-    name: z.string().min(2, {message: "Nome deve ter no mínimo 2 caracteres"}).max(100, {message: "Nome deve ter no máximo 100 caracteres"}),
-    adsress: z.string().optional() ,
+    name: z.string().min(1, {message: "O nome é obrigatório"}),
+    adress: z.string().optional() ,
     phone: z.string().optional(),
-    status: z.string,
-    timeZone: z.string().min(2, {message: "Time zone deve ter no mínimo 2 caracteres"}),
+    status: z.string(),
+    timeZone: z.string().min(1, {message: "O Time zone é obrigatório"}),
 })
 
-type ProfileFormData = z.infer<typeof profileSchema>;
+export type ProfileFormData = z.infer<typeof profileSchema>;
 
 export function userProfileForm() {
     return useForm<ProfileFormData>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
             name: "",
-            adsress: "",
+            adress: "",
             phone: "",
             status: "Ativo",
             timeZone: "",
