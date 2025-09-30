@@ -1,11 +1,16 @@
-export default function Services() {
-    return (
-        <section>
-            <h1>Página de Serviços</h1>
+import getSession from "@/lib/getSession";
+import { redirect } from "next/navigation";
+import { ServiceContent } from "./_components/service-content";
 
-            <div className="w-full h-[600px] bg-gray-200 mb-10"></div>
-            <div className="w-full h-[600px] bg-gray-500 mb-10"></div>
-            <div className="w-full h-[600px] bg-gray-200 mb-10"></div>
-        </section>
+export default async function Services() {
+
+    const session = await getSession()
+
+    if (!session) {
+        redirect('/')
+    }
+
+    return (
+        <ServiceContent userId={session.user.id} />
     )
 }
