@@ -35,9 +35,11 @@ import { ArrowRight } from 'lucide-react'
 
 import imgTest from '../../../../../../public/foto1.png'
 import { cn } from '@/lib/utils'
-import { Prisma } from '@/generated/prisma'
 import { updateProfile } from '../_actions/update-profile'
-
+import { toast } from 'sonner'
+import { formatPhone } from '@/utils/formatPhone'
+import { extractPhoneNumber } from '@/utils/formatPhone'
+import { Prisma } from '@/generated/prisma'
 
 type UserWithSubscription = Prisma.UserGetPayload<{
   include: {
@@ -50,9 +52,6 @@ interface ProfileContentProps {
 }
 
 export function ProfileContent({ user }: ProfileContentProps) {
-
-    console.log("user: ", user)
-
   const [selectedHours, setSelectedHours] = useState<string[]>(user.times ?? [])
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
@@ -64,7 +63,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
     timeZone: user.timezone
   });
 
-  
   function generateTimeSlots(): string[] {
     const hours: string[] = [];
 
@@ -75,9 +73,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
         hours.push(`${hour}:${minute}`)
       }
     }
-
     return hours;
-
   }
 
   const hours = generateTimeSlots();
@@ -98,23 +94,24 @@ export function ProfileContent({ user }: ProfileContentProps) {
   );
 
   async function onSubmit(values: ProfileFormData) {
-    const profileData = {
-      ...values,
-      times: selectedHours
-    }
+
+    const extractedPhone = extractPhoneNumber(values.phone || "")
 
     const response = await updateProfile({
       name: values.name,
       address: values.address,
-      phone: values.phone,
       status: values.status === 'active' ? true : false,
+      phone: extractedPhone,
       timeZone: values.timeZone,
       times: selectedHours || []
     })
 
-    console.log("resposta: ", response)
+    if (response.error) {
+      toast.error(response.error)
+      return;
+    }
+    toast.success(response.data)
   }
-
 
   return (
     <div className='mx-auto'>
@@ -185,7 +182,11 @@ export function ProfileContent({ user }: ProfileContentProps) {
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder='Digite o telefone...'
+                          placeholder='(67) 99912-3456'
+                          onChange={(e) => {
+                            const formattedValue = formatPhone(e.target.value)
+                            field.onChange(formattedValue)
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
