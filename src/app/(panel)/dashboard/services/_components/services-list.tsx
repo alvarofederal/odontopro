@@ -25,7 +25,6 @@ export function ServicesList() {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <section className='mx-auto'>
@@ -40,7 +39,10 @@ export function ServicesList() {
             </DialogTrigger>
 
             <DialogContent>
-              <DialogService />
+              <DialogService 
+                closeModal={
+                  () => setIsDialogOpen(false)
+                }/>
             </DialogContent>
           </CardHeader>
 
