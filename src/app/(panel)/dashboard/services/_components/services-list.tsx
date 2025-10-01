@@ -14,11 +14,7 @@ import { Plus } from "lucide-react"
 import { DialogService } from "./dialog-service"
 
 export function ServicesList() {
-
     const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-
-
 
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -31,7 +27,6 @@ export function ServicesList() {
                                 <Plus className="h-4 w-4" />
                             </Button>
                         </DialogTrigger>
-
                         <DialogContent>
                             <DialogService />
                         </DialogContent>
