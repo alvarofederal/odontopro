@@ -40,12 +40,12 @@ interface ServicesListProps {
 
 export function ServicesList({ services }: ServicesListProps) {
 
-  console.log(services)
-
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingService, setEditingService] = useState<Service | null>(null)
 
-  async function handleUpdateService(serviceId: string) {
-    console.log("atualizar serviço", serviceId)
+  async function handleUpdateService(service: Service) {
+    setEditingService(service);
+    setIsDialogOpen(true);
   }
 
   async function handleDeleteService(serviceId: string) {
@@ -71,11 +71,27 @@ export function ServicesList({ services }: ServicesListProps) {
               </Button>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent
+              onInteractOutside={ (e) => {
+                e.preventDefault();
+                setIsDialogOpen(false);
+                setEditingService(null);
+              }}>
               <DialogService 
                 closeModal={
-                  () => setIsDialogOpen(false)
-                }/>
+                  () => {
+                    setIsDialogOpen(false);
+                    setEditingService(null);
+                  }
+                }
+                serviceId={editingService ? editingService.id : undefined}
+                initialValues={editingService ?{
+                  name: editingService.name,
+                  price: (editingService.price / 100).toFixed(2).replace('.', ','),
+                  hours: Math.floor(editingService.duration / 60).toString(),
+                  minutes: (editingService.duration % 60).toString(),
+                } : undefined}
+                />
             </DialogContent>
           </CardHeader>
 
@@ -92,13 +108,13 @@ export function ServicesList({ services }: ServicesListProps) {
                 {services.map((service) => (
                   <TableBody>
                     <TableRow>
-                      <TableCell className="font-semibold">{service.name}</TableCell>
+                      <TableCell>{service.name}</TableCell>
                       <TableCell>{formatCurrency(service.price / 100)}</TableCell>
                       <TableCell className="text-right">
                         <Button
                           variant="ghost"
                           size={"icon"}
-                          onClick={() => handleUpdateService(service.id.toString())}>
+                          onClick={() => handleUpdateService(service)}>
                           <Pencil className='w-4 h-4' />
                         </Button>
                         <Button
