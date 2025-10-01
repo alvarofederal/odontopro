@@ -17,11 +17,22 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Button } from '@/components/ui/button'
 import { Pencil, Plus, X } from 'lucide-react'
 import { DialogService } from './dialog-service'
 import { Service } from '@/generated/prisma'
 import { formatCurrency } from '@/utils/formatCurrency'
+import { deleteService } from '../_actions/delete-service'
+import { toast } from 'sonner'
 
 interface ServicesListProps {
   services: Service[]
@@ -33,10 +44,24 @@ export function ServicesList({ services }: ServicesListProps) {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
+  async function handleUpdateService(serviceId: string) {
+    console.log("atualizar serviço", serviceId)
+  }
+
+  async function handleDeleteService(serviceId: string) {
+    const respondse = await deleteService({ serviceId: serviceId })
+
+    if (respondse.error) {
+      toast.error(respondse.error)
+      return;
+    }
+
+    toast.success('Serviço deletado com sucesso')
+  }
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <section className='mx-auto'>
-
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-xl md:text-2xl font-bold'>Serviços</CardTitle>
@@ -55,37 +80,39 @@ export function ServicesList({ services }: ServicesListProps) {
           </CardHeader>
 
           <CardContent>
-                <section className='space-y-4 mt-5'>
-                  {services.map((service) => (
-                    <article key={service.id} className='flex items-center justify-between'>
-                      <div className='flex items-center space-x-2'>
-                        <span className='font-medium'>{service.name}</span>
-                        <span className='text-gray-500'> - </span>
-                        <span className='text-sm text-gray-600'>
-                          Valor: {formatCurrency(service.price / 100)}
-                        </span> 
-                        <span className='text-gray-500'> - </span>
-                        <span className='text-sm text-gray-600'>Duração: {service.duration} minutos</span>
-                      </div>
-
-                      <div>
+            <section className='mt-10'>
+              <Table >
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className='font-bold'>Serviço</TableHead>
+                    <TableHead className="font-bold">Valor</TableHead>
+                    <TableHead className="text-right font-bold">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                {services.map((service) => (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="font-semibold">{service.name}</TableCell>
+                      <TableCell>{formatCurrency(service.price / 100)}</TableCell>
+                      <TableCell className="text-right">
                         <Button
                           variant="ghost"
                           size={"icon"}
-                          onClick={() => {}}>
+                          onClick={() => handleUpdateService(service.id.toString())}>
                           <Pencil className='w-4 h-4' />
                         </Button>
                         <Button
                           variant="ghost"
                           size={"icon"}
-                          onClick={() => {}}>
+                          onClick={() => handleDeleteService(service.id.toString())}>
                           <X className='w-4 h-4' />
                         </Button>
-                      </div>
-                      
-                    </article>
-                  ))}
-                </section>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                ))}
+              </Table>
+            </section>
           </CardContent>
         </Card>
       </section>
