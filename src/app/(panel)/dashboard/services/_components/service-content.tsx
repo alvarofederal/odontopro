@@ -13,6 +13,6 @@ export async function ServicesContent({ userId }: ServicesContentProps) {
   console.log(services)
 
   return (
-    <ServicesList />
+    <ServicesList services={services.data || []}/>
   )
 }

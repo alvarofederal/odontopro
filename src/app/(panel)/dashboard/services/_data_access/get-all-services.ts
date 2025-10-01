@@ -5,7 +5,9 @@ import { toast } from "sonner"
 
 export async function getAllServices({ userId }: { userId: string }) {
     if (!userId) {
-        return toast.error("Falha ao buscar serviços.")
+        return {
+            error:"Falha ao buscar serviços."
+        }
     }
 
     try {
@@ -20,6 +22,8 @@ export async function getAllServices({ userId }: { userId: string }) {
             data: services
         }
     } catch (error) {
-        return toast.error("Falha ao buscar serviços.")
+        return {
+            error: "Falha ao buscar serviços."
+        }
     }
 }
