@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getInfoSchedule } from "./_data_access/get-info-schedule";
+import { ScheduleContent } from "./_components/schedule-content";
 
 export default async function SchedulePage({
     params,
@@ -16,7 +17,7 @@ export default async function SchedulePage({
 
     console.log(user)
     return (
-        <h1>Teste: {userId}</h1>
+        <ScheduleContent />
     )
 }
 
