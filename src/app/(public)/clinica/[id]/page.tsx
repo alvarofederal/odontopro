@@ -17,7 +17,7 @@ export default async function SchedulePage({
 
     console.log(user)
     return (
-        <ScheduleContent />
+        <ScheduleContent clinic={user}/>
     )
 }
 
