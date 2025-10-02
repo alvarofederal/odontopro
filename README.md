@@ -35,3 +35,61 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 "# odontopro" 
+
+
+# Sequência para Git Flow
+
+
+## Iniciando o Git Flow
+git checkout -b develop
+git flow init
+
+
+## Criação de uma feature
+git checkout develop
+git checkout -b name-feature
+
+git flow feature start name-feature
+
+
+## Finalização de uma feature
+git checkout develop
+git merge name-feature
+
+git flow feature finish name-feature
+
+
+
+### Branch Hotfix
+##Criação de um Hotfix
+git checkout master
+git checkout -b name-hotfix
+
+git flow hotfix start name-hotfix
+
+## Finalização de um Hotfix
+git checkout master
+git merge name-hotfix
+git checkout develop
+git merge name-hotfix
+git tag name-hotfix
+
+git flow hotfix finish name-hotfix
+
+
+
+### Branch Release
+## Criação de uma Release
+git checkout develop
+git checkout -b release/1.0.0
+
+git flow release start 1.0.0
+
+## Finalização de uma Release
+git checkout master
+git merge release/1.0.0
+git checkout develop
+git merge release/1.0.0
+git tag 1.0.0
+
+git flow release finish 1.0.0
