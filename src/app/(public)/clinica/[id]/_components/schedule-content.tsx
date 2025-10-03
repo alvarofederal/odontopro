@@ -53,14 +53,9 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
       const dateString = date.toISOString().split("T")[0]
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`)
 
-      
-      
-
-
-
-
-      return []
-      
+      const json = await response.json();
+      setLoadingSlots(false)
+      return json; //Retornar o array com horários que já tem bloqueio desse dia e dessa clínica.
     } catch (error) {
       console.log(error)
       setLoadingSlots(false)
@@ -71,12 +66,18 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
   useEffect(() => {
     if (seletedDate) {
       fetchBlockedTimes(seletedDate).then((blocked) => {
-        console.log("Horários reservados:", blocked)
+        setBlockedTimes(blocked)
+
+        const times = clinic.times || [];
+
+        const finalSlots = times.map((time) => ({
+          time: time,
+          available: !blocked.includes(time) 
+        }))
+
+        setAvailableTimeSlots(finalSlots)
       })
-      
     }
-
-
   }, [seletedDate, clinic.times, fetchBlockedTimes, selectedTime])
 
   async function handleRegisterAppointment(formData: AppointmentFormData){
@@ -86,7 +87,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="h-32 bg-emerald-500" />
-
       <section className="contianer mx-auto px-4 -mt-16">
         <div className="max-w-2xl mx-auto">
           <article className="flex flex-col items-center">
@@ -112,7 +112,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
         </div>
       </section>
-
 
       <section className="max-w-2xl mx-auto w-full mt-6">
         {/* Formulário de agendamento */}
@@ -242,7 +241,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
           </form>
         </Form>
       </section>
-
     </div>
   )
 }
