@@ -12,6 +12,7 @@ import { formatPhone } from '@/utils/formatPhone'
 import { DateTimePicker } from "./date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Prisma } from "@/generated/prisma"
+import "react-datepicker/dist/react-datepicker.css";
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -28,6 +29,12 @@ interface ScheduleContentProps {
 export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
   const form = useAppointmentForm();
+
+  const { watch} = form;
+
+  async function handleRegisterAppointment(formData: AppointmentFormData){
+    console.log(formData)
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,7 +58,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
             <div className="flex items-center gap-1">
               <MapPin className="w-5 h-5" />
               <span>
-                {clinic.address ? clinic.address : "Endereço não informado"}
+                {clinic.adress ? clinic.adress : "Endereço não informado"}
               </span>
             </div>
           </article>
@@ -64,6 +71,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         {/* Formulário de agendamento */}
         <Form {...form}>
           <form
+            onSubmit={form.handleSubmit(handleRegisterAppointment)}
             className="mx-2 space-y-6 bg-white p-6 border rounded-md shadow-sm"
           >
 
@@ -130,7 +138,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               name="date"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2 space-y-1">
-                  <FormLabel className="font-semibold">Data do agendamento:</FormLabel>
+                  <FormLabel className="font-semibold">Data do agendamento:</FormLabel><br/>
                   <FormControl>
                     <DateTimePicker
                       initialDate={new Date()}
@@ -172,6 +180,18 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               )}
             />
 
+            {clinic.status ? (
+              <Button 
+                type="submit"
+                className="w-full bg-emerald-500 hover:bg-emerald-400"
+                disabled={!watch("name") || !watch("email") || !watch("phone") || !watch("date")}>
+                Realizar agendamento
+              </Button>
+            ): (
+              <p className="bg-red-500 text-white text-center px-4 py-2 rounded-md">
+                A clínica está fechada nesse momento.
+              </p>
+            )}
           </form>
         </Form>
       </section>
