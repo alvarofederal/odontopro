@@ -13,6 +13,7 @@ import { DateTimePicker } from "./date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Prisma } from "@/generated/prisma"
 import "react-datepicker/dist/react-datepicker.css";
+import { useState } from "react"
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -21,16 +22,29 @@ type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   }
 }>
 
-
 interface ScheduleContentProps {
   clinic: UserWithServiceAndSubscription
+}
+
+interface TimeSlot {
+  time: string;
+  available: boolean;
 }
 
 export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
   const form = useAppointmentForm();
-
   const { watch} = form;
+
+  const [selectedTime, setSelectedTime] = useState("");
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<TimeSlot[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
+  //Quais os horários bloqueados
+  const [blockedTimes, setBlockedTimes] = useState<string[]>([]);
+  
+
+
 
   async function handleRegisterAppointment(formData: AppointmentFormData){
     console.log(formData)
