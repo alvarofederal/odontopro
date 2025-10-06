@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Prisma } from "@/generated/prisma"
 import "react-datepicker/dist/react-datepicker.css";
 import { useState, useCallback, useEffect } from "react"
+import { ScheduleTimeList } from "./schedule-time-list"
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -26,7 +27,7 @@ interface ScheduleContentProps {
   clinic: UserWithServiceAndSubscription
 }
 
-interface TimeSlot {
+export interface TimeSlot {
   time: string;
   available: boolean;
 }
@@ -36,7 +37,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
   const form = useAppointmentForm();
   const { watch} = form;
 
-  const seletedDate = watch("date")
+  const selectedDate = watch("date")
   const selectedServiceId = watch("serviceId")
 
   const [selectedTime, setSelectedTime] = useState("");
@@ -64,8 +65,8 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
   }, [clinic.id])
 
   useEffect(() => {
-    if (seletedDate) {
-      fetchBlockedTimes(seletedDate).then((blocked) => {
+    if (selectedDate) {
+      fetchBlockedTimes(selectedDate).then((blocked) => {
         setBlockedTimes(blocked)
 
         const times = clinic.times || [];
@@ -78,7 +79,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         setAvailableTimeSlots(finalSlots)
       })
     }
-  }, [seletedDate, clinic.times, fetchBlockedTimes, selectedTime])
+  }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime])
 
   async function handleRegisterAppointment(formData: AppointmentFormData){
     console.log(formData)
@@ -225,6 +226,33 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
+
+            {selectedServiceId && (
+              <div className="space-y-2">
+                <Label className="font-semibold">Horários disponíveis:</Label>
+                <div className="bg-gray-100 p-4 rounded-lg">
+                  {loadingSlots ? (
+                    <p>Carregando horários...</p>
+                  ) : availableTimeSlots.length ===0 ? (
+                    <p>Nenhum horário disponível</p>
+                  ) : (
+                    <ScheduleTimeList 
+                      onSelectTime={(time) => setSelectedTime(time)}
+                      clinicTimes={clinic.times}
+                      blockedTimes={blockedTimes}
+                      availableTimesSlots={availableTimeSlots}
+                      selectedTime={selectedTime}
+                      selectedDate={selectedDate}
+                      requiredSlots={
+                        clinic.services.find(service => service.id === selectedServiceId) 
+                        ? Math.ceil(clinic.services.find(service => service.id === selectedServiceId)!.duration / 30) 
+                        : 1
+                      }
+                    />
+                  )}
+                </div>
+              </div>
+            )}
 
             {clinic.status ? (
               <Button 
