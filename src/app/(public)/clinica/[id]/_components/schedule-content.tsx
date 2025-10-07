@@ -241,7 +241,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="serviceId"
@@ -271,15 +271,15 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
             />
 
             {selectedServiceId && (
-              <div className="space-y-6">
+              <div className='space-y-2'>
                 <Label className="font-semibold">Horários disponíveis:</Label>
-                <div className="bg-gray-100 p-4 rounded-lg">
+                <div className='bg-gray-100 p-4 rounded-lg'>
                   {loadingSlots ? (
                     <p>Carregando horários...</p>
-                  ) : availableTimeSlots.length ===0 ? (
+                  ) : availableTimeSlots.length === 0 ? (
                     <p>Nenhum horário disponível</p>
                   ) : (
-                    <ScheduleTimeList 
+                    <ScheduleTimeList
                       onSelectTime={(time) => setSelectedTime(time)}
                       clinicTimes={clinic.times}
                       blockedTimes={blockedTimes}
@@ -287,9 +287,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                       selectedTime={selectedTime}
                       selectedDate={selectedDate}
                       requiredSlots={
-                        clinic.services.find(service => service.id === selectedServiceId) 
-                        ? Math.ceil(clinic.services.find(service => service.id === selectedServiceId)!.duration / 30) 
-                        : 1
+                        clinic.services.find(service => service.id === selectedServiceId) ? Math.ceil(clinic.services.find(service => service.id === selectedServiceId)!.duration / 30) : 1
                       }
                     />
                   )}

@@ -101,6 +101,7 @@ export function ServicesList({ services }: ServicesListProps) {
                 <TableHeader>
                   <TableRow>
                     <TableHead className='font-bold'>Serviço</TableHead>
+                    <TableHead className='font-bold'>Duração</TableHead>
                     <TableHead className="font-bold">Valor</TableHead>
                     <TableHead className="text-right font-bold">Ações</TableHead>
                   </TableRow>
@@ -109,6 +110,7 @@ export function ServicesList({ services }: ServicesListProps) {
                   <TableBody>
                     <TableRow>
                       <TableCell>{service.name}</TableCell>
+                      <TableCell>{service.duration / 60} hs</TableCell>
                       <TableCell>{formatCurrency(service.price / 100)}</TableCell>
                       <TableCell className="text-right">
                         <Button
