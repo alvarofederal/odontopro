@@ -262,7 +262,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
             />
 
             {selectedServiceId && (
-              <div className="space-y-2">
+              <div className="space-y-6">
                 <Label className="font-semibold">Horários disponíveis:</Label>
                 <div className="bg-gray-100 p-4 rounded-lg">
                   {loadingSlots ? (
