@@ -115,6 +115,11 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
     toast.success("Consulta agendada com sucesso!")
     form.reset();
+    formData.name = "";
+    formData.email = "";
+    formData.phone = "";
+    formData.date = new Date;
+    formData.serviceId = "";
     setSelectedTime("");
   } 
 
@@ -227,6 +232,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                       onChange={(date) => {
                         if (date) {
                           field.onChange(date)
+                          setSelectedTime("")
                         }
                       }}
                     />
@@ -243,7 +249,10 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <FormItem className="">
                   <FormLabel className="font-semibold">Selecione o serviço:</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange}>
+                    <Select onValueChange={(value) => {
+                      field.onChange(value)
+                      setSelectedTime("")
+                    }}>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione um serviço" />
                       </SelectTrigger>

@@ -44,10 +44,11 @@ export async function createNewAppointment(formData: FormSchema) {
                 userId: formData.clinicId,
             }
         })
-
+        
         return {
             data: newAppointment
         }
+        
     } catch (error) {
         console.log(error)
         return{

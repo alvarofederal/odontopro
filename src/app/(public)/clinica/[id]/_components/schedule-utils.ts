@@ -28,11 +28,16 @@ export function isSlotInThePast(slotTime: string){
     return false;
 }
 
+/**
+ * Verificar se, a partir de um slot inicial, existe uma sequência de 'requiredSlots' disponíveis
+ * EX.: Se um serviço tem 2 required slots e começa no time 15:00,
+ * precisa garantir que 15:00 e 15:30 não estejam no nosso blockedSlots
+ */
 export function isSlotSequenceAvailable(
-    startSlot: string,
-    requiredSlots: number,
-    allSlots: string[],
-    blockedSlots: string[]
+    startSlot: string, //> Primeiro horário disponível
+    requiredSlots: number, //> Quantidade de slots necessários
+    allSlots: string[], //> Todos horários da clínica
+    blockedSlots: string[] //> Horários bloqueados
 ){
     const startIndex = allSlots.indexOf(startSlot)
     if (startIndex === -1 || startIndex + requiredSlots > allSlots.length) {
