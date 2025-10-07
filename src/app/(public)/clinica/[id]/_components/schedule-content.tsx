@@ -73,12 +73,23 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
         const times = clinic.times || [];
 
+        // cria os slots vazios
         const finalSlots = times.map((time) => ({
           time: time,
           available: !blocked.includes(time) 
         }))
 
-        setAvailableTimeSlots(finalSlots)
+        setAvailableTimeSlots(finalSlots)  
+
+        // verificar se o slot atual estiver indisponivel, limparmos a seleção
+        const stillAvaliable = finalSlots.find(
+          (slot) => slot.time === selectedTime && slot.available
+        )
+    
+        if (!stillAvaliable) {
+          setSelectedTime("")  
+        }
+        
       })
     }
   }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime])
