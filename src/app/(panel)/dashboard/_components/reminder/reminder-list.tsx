@@ -8,6 +8,8 @@ import { Plus, Trash } from "lucide-react"
 import { deleteReminder } from "../../_actions/delete-reminder"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { ReminderContent } from "./reminder-content"
 
 interface ReminderListProps {
     reminder: Reminder[]
@@ -35,9 +37,23 @@ export async function ReminderList( { reminder }: ReminderListProps){
                         Lembretes
                     </CardTitle>
 
-                    <Button variant="ghost" className="w-9 p-0">
-                        <Plus className="w-5 h-5"/>
-                    </Button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button variant="ghost" className="w-9 p-0">
+                                <Plus className="w-5 h-5"/>
+                            </Button>
+                        </DialogTrigger>
+
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Novo Lembrete</DialogTitle>
+                                <DialogDescription>Criar um novo lembrete para sua lista.</DialogDescription>
+                            </DialogHeader>
+
+                            <ReminderContent />
+                        </DialogContent>
+                    </Dialog>
+
                 </CardHeader>
                 <CardContent>
                     {reminder.length === 0 && (
