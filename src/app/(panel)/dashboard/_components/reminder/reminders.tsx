@@ -1,5 +1,6 @@
 
 import { getReminders } from "../../_data_access/get-reminders"
+import { ReminderList } from "./reminder-list"
 
 export async function Reminders({userId}: {userId: string}){
     
@@ -8,7 +9,6 @@ export async function Reminders({userId}: {userId: string}){
     console.log("Lembretes: ", reminders)
     
     return (
-
-        <div>LEMBRETES</div>
+        <ReminderList reminder={reminders} />
     )
 }
