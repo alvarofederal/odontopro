@@ -57,12 +57,15 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
 
     if (data && data.length > 0) {
         for (const appointment of data) {
-            const requiredSlots = Math.ceil(appointment.service.duration / 30)   
-            const startIndex = times.lastIndexOf(appointment.time)
+
+            const requiredSlots = Math.ceil(appointment.service.duration / 30);
+
+            const startIndex = times.lastIndexOf(appointment.time);
             
             if (startIndex !== -1) {
                 for (let i = 0; i < requiredSlots; i++) {
-                    const slotIndex = startIndex + i
+
+                    const slotIndex = startIndex + i;
 
                     if (slotIndex < times.length) {
                         occupantMap[times[slotIndex]] = appointment
