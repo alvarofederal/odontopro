@@ -5,6 +5,14 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card"
 import { useQuery } from "@tanstack/react-query"
 import { format } from "date-fns"
+import { Prisma } from "@/generated/prisma"
+
+type AppointmentWithService = Prisma.ApointmentGetPayload<{
+    include: { 
+        service: true 
+    }
+}>
+
 
 interface AppointmentsListProps {
     times: string[]
@@ -15,7 +23,7 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
     const searchParams = useSearchParams()
     const date = searchParams.get("date") || ""
 
-    const {} = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ["get-appointments", date],
         queryFn: async () => {
             let activeDate = date;
@@ -27,7 +35,7 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
             const url = `${process.env.NEXT_PUBLIC_URL}/api/clinic/appointments?date=${activeDate}`
             const response = await fetch(url)
 
-            const json = await response.json()
+            const json = await response.json() as AppointmentWithService[]
 
             if (!response?.ok) {
                 return []
@@ -38,10 +46,32 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
             return json;
         }
     })
+
+    // Montar occupantMap slot > appointment
+    // Se um Appointment começa no time (15:00) e tem requiredSlots 2
+    // occupantMap[15:00, appointment], occupantMap[15:30, appointment]
+    // Depois, ao renderizar, se o slot tiver appointment, mostrar os dados do appointment
+    // Se não tiver, mostrar como disponível 
+
+    const occupantMap: Record<string, AppointmentWithService> = {}
+
+    if (data && data.length > 0) {
+        for (const appointment of data) {
+            const requiredSlots = Math.ceil(appointment.service.duration / 30)   
+            const startIndex = times.lastIndexOf(appointment.time)
+            
+            if (startIndex !== -1) {
+                for (let i = 0; i < requiredSlots; i++) {
+                    const slotIndex = startIndex + i
+
+                    if (slotIndex < times.length) {
+                        occupantMap[times[slotIndex]] = appointment
+                    }
+                }
+            }
+        }   
+    }
     
-
-
-
     return (
         <Card >
             <CardHeader className="flex flex-row items-center justify-between space-y-4 pb-4">
@@ -56,7 +86,28 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                         {times.length === 0 && (
                             <p className="text-sm text-gray-500">Nenhum agendamento encontrado.</p> 
                         )}
-                        {times.map((slot) => {
+                        {isLoading ? (
+                            <p className="text-sm text-gray-500">Carregando agenda...</p>
+                        ) : (
+                         times.map((slot) => {
+
+                            const occupant = occupantMap[slot]
+
+                            if (occupant) {
+                                return (
+                                    <div key={slot} className="flex items-center py-2 border-t last:border-b">
+                                        <div className="w-16 text-sm font-semibold">  
+                                            {slot} 
+                                        </div>
+                                        <div>
+                                            <p className="font-medium">Paciente: {occupant.name}</p> 
+                                            <p className="text-sm text-gray-500">Procedimento: {occupant.service.name}</p>
+                                            <p className="text-sm text-gray-500">Contato: {occupant.phone} </p>
+                                        </div>
+                                    </div>                            
+                                )
+                            }
+
                             return (
                                 <div key={slot} className="flex items-center py-2 border-t last:border-b">
                                     <div key={slot} className="w-16 text-sm font-semibold">  
@@ -67,7 +118,8 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                                     </div>
                                 </div>                            
                             )
-                        })}
+                        })   
+                        )}
                     </div>
                 </ScrollArea>
             </CardContent>
