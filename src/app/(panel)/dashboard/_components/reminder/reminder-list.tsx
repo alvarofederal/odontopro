@@ -39,8 +39,6 @@ export function ReminderList({ reminder }: ReminderListProps) {
 
     toast.success(response.data);
     router.refresh();
-    form.reset();
-    setIsDialogOpen(false);
   }
 
   return (
