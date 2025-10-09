@@ -44,7 +44,9 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
             console.log(json)
 
             return json;
-        }
+        },
+        staleTime: 20000, // 20 segundos
+        refetchInterval: 30000, // 30 segundos
     })
 
     // Montar occupantMap slot > appointment
