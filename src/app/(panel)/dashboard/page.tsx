@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import getSesion from '@/lib/getSession'
+import getSession from '@/lib/getSession'
 import { Calendar } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -8,7 +8,7 @@ import { Reminders } from './_components/reminder/reminders'
 import { Appointments } from './_components/appointments/appointments'
 
 export default async function Dashboard() {
-  const session = await getSesion()
+  const session = await getSession()
 
   if (!session) {
     redirect("/")
