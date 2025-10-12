@@ -1,15 +1,13 @@
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AppointmentWithService } from "./appointments-list";
-
+import { formatCurrency } from "@/utils/formatCurrency";
+import { format } from "date-fns";
 
 interface DialogAppointmentProps {
     appointment: AppointmentWithService | null
 }
 
-
 export function DialogAppointment({ appointment }: DialogAppointmentProps) {
-
-    console.log("Agendamento detalhe: ", appointment)
 
     return (
         <DialogContent>
@@ -25,12 +23,20 @@ export function DialogAppointment({ appointment }: DialogAppointmentProps) {
             <div className="grid gap-4 py-4">
                 {appointment &&  (
                     <article >
-                        <p><strong>Cliente:</strong> {appointment.name}</p>
-                        <p><strong>Serviço:</strong> {appointment.service.name}</p>
-                        <p><strong>Valor:</strong> {appointment.service.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
-                        <p><strong>Telefone:</strong> {appointment.phone}</p>
+                        <p><span className="font-semibold">Data/Hora do agendamento: </span>{format(appointment.apointmentDate, "dd/MM/yyyy")} - {appointment.time}</p>
+                        <p className="mb-2"><span className="font-semibold">Paciente: </span>{appointment.name}</p>
 
-                        <p><strong>Data:</strong> {new Date(appointment.apointmentDate).toLocaleDateString()}</p>
+                        <section className="bg-gray-100 mt-4 p-2 rounded-md">
+                            <p><span className="font-semibold">Serviço: </span> {appointment.service.name}</p>
+                            <p><span className="font-semibold">Valor da consulta: </span>{formatCurrency(appointment.service.price / 100)}</p>
+                        </section>
+                        
+
+                        <section className="bg-gray-100 mt-4 p-2 rounded-md">
+                            <h1 className="font-bold"><strong>Contatos do paciente</strong></h1>
+                            <p><span className="font-semibold">Telefone:</span> {appointment.phone}</p>
+                            <p><span className="font-semibold">E-mail:</span> {appointment.email}</p>
+                        </section>
                     </article>   
                 )}
             </div>
