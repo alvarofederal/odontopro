@@ -34,7 +34,6 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [detailAppointment, setDetailAppointment] = useState<AppointmentWithService | null>(null)
 
-
     const { data, isLoading, refetch } = useQuery({
         queryKey: ["get-appointments", date],
         queryFn: async () => {
@@ -46,14 +45,11 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
 
             const url = `${process.env.NEXT_PUBLIC_URL}/api/clinic/appointments?date=${activeDate}`
             const response = await fetch(url)
-
             const json = await response.json() as AppointmentWithService[]
 
             if (!response?.ok) {
                 return []
             }
-
-            console.log(json)
 
             return json;
         },
@@ -71,14 +67,11 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
 
     if (data && data.length > 0) {
         for (const appointment of data) {
-
             const requiredSlots = Math.ceil(appointment.service.duration / 30);
-
             const startIndex = times.lastIndexOf(appointment.time);
             
             if (startIndex !== -1) {
                 for (let i = 0; i < requiredSlots; i++) {
-
                     const slotIndex = startIndex + i;
 
                     if (slotIndex < times.length) {
@@ -91,6 +84,7 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
 
     async function handleAppointmentDelete(appointmentId: string) {
         const response = await cancelAppointment({ appointmentId: appointmentId })
+        
         if (response.error) {
             toast.error(response.error)
             return;
@@ -122,7 +116,6 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                                 <p className="text-sm text-gray-500">Carregando agenda...</p>
                             ) : (
                                 times.map((slot) => {
-
                                     const occupant = occupantMap[slot]
 
                                     if (occupant) {
