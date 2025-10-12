@@ -23,7 +23,12 @@ export function DialogAppointment({ appointment }: DialogAppointmentProps) {
             <div className="grid gap-4 py-4">
                 {appointment &&  (
                     <article >
-                        <p><span className="font-semibold">Data/Hora do agendamento: </span>{format(appointment.apointmentDate, "dd/MM/yyyy")} - {appointment.time}</p>
+                        <p><span className="font-semibold">Data/Hora do agendamento: </span>{new Intl.DateTimeFormat('pt-BR', {
+                            timeZone: 'UTC',
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                        }).format(new Date(appointment.apointmentDate))} - {appointment.time}</p>
                         <p className="mb-2"><span className="font-semibold">Paciente: </span>{appointment.name}</p>
 
                         <section className="bg-gray-100 mt-4 p-2 rounded-md">
@@ -31,7 +36,6 @@ export function DialogAppointment({ appointment }: DialogAppointmentProps) {
                             <p><span className="font-semibold">Valor da consulta: </span>{formatCurrency(appointment.service.price / 100)}</p>
                         </section>
                         
-
                         <section className="bg-gray-100 mt-4 p-2 rounded-md">
                             <h1 className="font-bold"><strong>Contatos do paciente</strong></h1>
                             <p><span className="font-semibold">Telefone:</span> {appointment.phone}</p>

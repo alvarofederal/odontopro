@@ -89,7 +89,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         if (!stillAvaliable) {
           setSelectedTime("")  
         }
-        
       })
     }
   }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime])
@@ -111,18 +110,13 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
     if (response.error) {
       toast.error(response.error)
+      return;
     }
 
     toast.success("Consulta agendada com sucesso!")
     form.reset();
-    formData.name = "";
-    formData.email = "";
-    formData.phone = "";
-    formData.date = new Date;
-    formData.serviceId = "";
     setSelectedTime("");
   } 
-
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -158,9 +152,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleRegisterAppointment)}
-            className="mx-2 space-y-6 bg-white p-6 border rounded-md shadow-sm"
-          >
-
+            className="mx-2 space-y-6 bg-white p-6 border rounded-md shadow-sm">
             <FormField
               control={form.control}
               name="name"
