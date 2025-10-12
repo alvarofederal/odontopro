@@ -14,13 +14,13 @@ import { useState } from "react"
 import { Dialog } from "@radix-ui/react-dialog"
 import { DialogTrigger } from "@/components/ui/dialog"
 import { DialogAppointment } from "./dialog-appointment"
+import { ButtonPickerAppointment } from "./button-date"
 
 export type AppointmentWithService = Prisma.ApointmentGetPayload<{
     include: { 
         service: true 
     }
 }>
-
 
 interface AppointmentsListProps {
     times: string[]
@@ -101,7 +101,6 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
         })
         refetch()
         toast.success(response.data)
-
     }
     
     return (
@@ -111,7 +110,7 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                     <CardTitle className="text-xl md:text-2xl font-bold">
                         Agedamentos
                     </CardTitle>    
-                    <button>SELECIONAR DATA</button>
+                    <ButtonPickerAppointment/>
                 </CardHeader>
                 <CardContent>
                     <ScrollArea className="h-[calc(100vh-20rem)] lg:h-[calc(100vh-15rem)] pr-4">

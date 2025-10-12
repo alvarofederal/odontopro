@@ -9,8 +9,6 @@ interface DialogAppointmentProps {
 
 export function DialogAppointment({ appointment }: DialogAppointmentProps) {
 
-    console.log("Agendamento detalhe: ", appointment)
-
     return (
         <DialogContent>
             <DialogHeader>
