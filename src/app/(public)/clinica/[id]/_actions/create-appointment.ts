@@ -31,7 +31,22 @@ export async function createNewAppointment(formData: FormSchema) {
         const year = selectedDate.getFullYear();
         const month = selectedDate.getMonth();
         const day = selectedDate.getDate();
-        const appointmentDate  = new Date(year, month, day, 0,0,0,0)
+        const appointmentDate = new Date(Date.UTC(year, month, day, 0,0,0,0))
+
+        const existingAppointment = await prisma.apointment.findFirst({
+            where: {
+                apointmentDate: appointmentDate,
+                time: formData.time,
+                userId: formData.clinicId,
+                serviceId: formData.serviceId,
+            }
+        })
+
+        if (existingAppointment ) {
+            return {
+                error: "Já existe um agendamento para este dia e horário"
+            }
+        }
 
         const newAppointment = await prisma.apointment.create({
             data: {
@@ -44,10 +59,11 @@ export async function createNewAppointment(formData: FormSchema) {
                 userId: formData.clinicId,
             }
         })
-
+        
         return {
             data: newAppointment
         }
+        
     } catch (error) {
         console.log(error)
         return{

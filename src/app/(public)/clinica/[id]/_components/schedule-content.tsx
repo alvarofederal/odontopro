@@ -89,7 +89,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         if (!stillAvaliable) {
           setSelectedTime("")  
         }
-        
       })
     }
   }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime])
@@ -111,13 +110,13 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
     if (response.error) {
       toast.error(response.error)
+      return;
     }
 
     toast.success("Consulta agendada com sucesso!")
     form.reset();
     setSelectedTime("");
   } 
-
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -153,9 +152,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleRegisterAppointment)}
-            className="mx-2 space-y-6 bg-white p-6 border rounded-md shadow-sm"
-          >
-
+            className="mx-2 space-y-6 bg-white p-6 border rounded-md shadow-sm">
             <FormField
               control={form.control}
               name="name"
@@ -227,6 +224,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                       onChange={(date) => {
                         if (date) {
                           field.onChange(date)
+                          setSelectedTime("")
                         }
                       }}
                     />
@@ -235,7 +233,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="serviceId"
@@ -243,7 +241,10 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <FormItem className="">
                   <FormLabel className="font-semibold">Selecione o serviço:</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange}>
+                    <Select onValueChange={(value) => {
+                      field.onChange(value)
+                      setSelectedTime("")
+                    }}>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione um serviço" />
                       </SelectTrigger>
@@ -262,15 +263,15 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
             />
 
             {selectedServiceId && (
-              <div className="space-y-6">
+              <div className='space-y-2'>
                 <Label className="font-semibold">Horários disponíveis:</Label>
-                <div className="bg-gray-100 p-4 rounded-lg">
+                <div className='bg-gray-100 p-4 rounded-lg'>
                   {loadingSlots ? (
                     <p>Carregando horários...</p>
-                  ) : availableTimeSlots.length ===0 ? (
+                  ) : availableTimeSlots.length === 0 ? (
                     <p>Nenhum horário disponível</p>
                   ) : (
-                    <ScheduleTimeList 
+                    <ScheduleTimeList
                       onSelectTime={(time) => setSelectedTime(time)}
                       clinicTimes={clinic.times}
                       blockedTimes={blockedTimes}
@@ -278,9 +279,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                       selectedTime={selectedTime}
                       selectedDate={selectedDate}
                       requiredSlots={
-                        clinic.services.find(service => service.id === selectedServiceId) 
-                        ? Math.ceil(clinic.services.find(service => service.id === selectedServiceId)!.duration / 30) 
-                        : 1
+                        clinic.services.find(service => service.id === selectedServiceId) ? Math.ceil(clinic.services.find(service => service.id === selectedServiceId)!.duration / 30) : 1
                       }
                     />
                   )}

@@ -60,7 +60,13 @@ export function ServicesList({ services }: ServicesListProps) {
   }
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={
+      (open) => {
+        setIsDialogOpen(open);
+        if (!open) {
+          setEditingService(null);
+        } 
+      }}>
       <section className='mx-auto'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -101,6 +107,7 @@ export function ServicesList({ services }: ServicesListProps) {
                 <TableHeader>
                   <TableRow>
                     <TableHead className='font-bold'>Serviço</TableHead>
+                    <TableHead className='font-bold'>Duração</TableHead>
                     <TableHead className="font-bold">Valor</TableHead>
                     <TableHead className="text-right font-bold">Ações</TableHead>
                   </TableRow>
@@ -109,6 +116,7 @@ export function ServicesList({ services }: ServicesListProps) {
                   <TableBody>
                     <TableRow>
                       <TableCell>{service.name}</TableCell>
+                      <TableCell>{service.duration / 60} hs</TableCell>
                       <TableCell>{formatCurrency(service.price / 100)}</TableCell>
                       <TableCell className="text-right">
                         <Button
