@@ -4,6 +4,8 @@ import { Hero } from "./_components/hero";
 import { Professionals } from "./_components/professionals";
 import { getProfessionals } from "./_data_access/get-professionals";
 
+export const revalidate = 120; // revalidate this page every 60 seconds
+
 export default async function Home() {
 
   const professionals = await getProfessionals();
