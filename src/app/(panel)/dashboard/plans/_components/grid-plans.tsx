@@ -1,5 +1,4 @@
 
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { subscriptionPlans } from '@/utils/plans/index'
+import { SubscriptionButton } from './subscription-button'
 
 export function GridPlans() {
   return (
@@ -31,15 +31,7 @@ export function GridPlans() {
                 </ul>
             </CardContent>
             <CardFooter>
-                {index === 1 ? (
-                    <Button className='w-full bg-emerald-500' >
-                        Ativar assinatura
-                    </Button>
-                ):(
-                    <Button className='w-full bg-black' >
-                        Ativar assinatura
-                    </Button>
-                )}
+                <SubscriptionButton type={plan.id === "BASIC" ? "BASIC" : "PROFESSIONAL"}/>    
             </CardFooter>
         </Card>
       ))}
