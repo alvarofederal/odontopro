@@ -25,7 +25,6 @@ export function SubscriptionButton({ type }: SubscriptionButtonProps) {
         if(stripe && url) {
             window.location.href = url;
         }
-
     }
 
     return (
