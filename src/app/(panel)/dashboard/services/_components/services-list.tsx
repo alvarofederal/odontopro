@@ -33,15 +33,20 @@ import { Service } from '@/generated/prisma'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { deleteService } from '../_actions/delete-service'
 import { toast } from 'sonner'
+import { ResultPermissionProp } from '@/utils/permissions/canPermission'
+import Link from 'next/link'
 
 interface ServicesListProps {
-  services: Service[]
+  services: Service[],
+  permission: ResultPermissionProp
 }
 
-export function ServicesList({ services }: ServicesListProps) {
+export function ServicesList({ services, permission }: ServicesListProps) {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingService, setEditingService] = useState<Service | null>(null)
+
+  const servicesList = permission.hasPermission ? services : services.slice(0, permission.plan ? permission.plan.maxServices : 0);
 
   async function handleUpdateService(service: Service) {
     setEditingService(service);
@@ -49,10 +54,10 @@ export function ServicesList({ services }: ServicesListProps) {
   }
 
   async function handleDeleteService(serviceId: string) {
-    const respondse = await deleteService({ serviceId: serviceId })
+    const response = await deleteService({ serviceId: serviceId })
 
-    if (respondse.error) {
-      toast.error(respondse.error)
+    if (response.error) {
+      toast.error(response.error)
       return;
     }
 
@@ -71,11 +76,19 @@ export function ServicesList({ services }: ServicesListProps) {
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-xl md:text-2xl font-bold'>Serviços</CardTitle>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className='w-4 h-4' />
-              </Button>
-            </DialogTrigger>
+            {permission.hasPermission && (
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className='w-4 h-4' />
+                </Button>
+              </DialogTrigger>
+            )}
+
+            {!permission.hasPermission && (
+              <Link href="/dashboard/plans" className='text-red-500' >
+                Limite de serviços excedido - Atualize seu plano
+              </Link>
+            )}
 
             <DialogContent
               onInteractOutside={ (e) => {
@@ -112,7 +125,7 @@ export function ServicesList({ services }: ServicesListProps) {
                     <TableHead className="text-right font-bold">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
-                {services.map((service) => (
+                {servicesList.map((service) => (
                   <TableBody>
                     <TableRow>
                       <TableCell>{service.name}</TableCell>

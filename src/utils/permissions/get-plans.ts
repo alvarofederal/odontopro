@@ -16,7 +16,7 @@ const PLANS_LIMITS: PlansProps = {
     },
 }
 
-export function getPlan(planId: Plan) {
+export async function getPlan(planId: Plan) {
     return PLANS_LIMITS[planId];
 }
 
