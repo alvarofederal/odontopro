@@ -15,7 +15,6 @@ export default async function SchedulePage({
         redirect("/")
     }
 
-    console.log(user)
     return (
         <ScheduleContent clinic={user}/>
     )

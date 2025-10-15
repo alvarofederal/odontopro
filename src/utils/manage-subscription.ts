@@ -1,6 +1,7 @@
 import { Plan } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/utils/stripe";
+import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 
 /*
@@ -28,7 +29,7 @@ export async function manageSubscription(
 
     const findUser = await prisma.user.findFirst({
         where: {
-            id: customerId
+            stripeCustomerId: customerId
         }
     });
 
@@ -47,11 +48,12 @@ export async function manageSubscription(
     }
 
     if(subscriptionId && deleteAction) {
-        await prisma.user.delete({
+        await prisma.subscription.delete({
             where: {
                 id: subscriptionId,
             }
         });
+
         return;
     }
 
@@ -59,7 +61,7 @@ export async function manageSubscription(
         try {
             await prisma.subscription.create({
                 data: subscriptionData
-            });   
+            });  
         } catch (error) {
             console.log("ERRO AO SALVAR A ASSINATURA NO BANCO DE DADOS");
             console.log(error);
@@ -72,7 +74,7 @@ export async function manageSubscription(
                     id: subscriptionId
                 }
             });
-
+            
             if(!findSubscription) {
                 console.log("ASSINATURA NÃO ENCONTRADA NO BANCO DE DADOS");
                 return;
@@ -85,18 +87,12 @@ export async function manageSubscription(
                 data: {
                     status: subscription.status,
                     priceId: subscription.items.data[0].price.id,
-                    plan: type ?? "BASIC",
                 }
             });
+
         } catch (error) {
             console.log("ERRO AO ATUALIZAR A ASSINATURA NO BANCO DE DADOS");
         }
-    }
-
-    if(deleteAction) {
-        // Deletar a assinatura no banco de dados
- 
-        return;
     }
 
 }

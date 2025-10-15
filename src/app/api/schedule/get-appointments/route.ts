@@ -22,10 +22,6 @@ export async function GET(request: NextRequest){
         const startDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0))
         const endDate = new Date(Date.UTC(year, month - 1, day, 23,59,59, 999))
 
-
-        console.log("Start Date (UTC) tela de marcacao:", startDate);
-        console.log("End Date (UTC):", endDate);
-
         const user = await prisma.user.findFirst({
             where: {
                 id: userId
@@ -54,7 +50,6 @@ export async function GET(request: NextRequest){
         })
 
         // Montar com todos os slots ocupados
-
         const blockedSlots = new Set<string>();
 
         for (const apt of appointments) {
@@ -73,8 +68,6 @@ export async function GET(request: NextRequest){
         }
 
         const blockeTimes = Array.from(blockedSlots)
-
-        console.log("blockeTimes: ",blockeTimes)
 
         return NextResponse.json(blockeTimes) 
     } catch (error) {

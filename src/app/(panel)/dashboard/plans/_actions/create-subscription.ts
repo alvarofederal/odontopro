@@ -89,8 +89,6 @@ export async function createSubscription({type}: SubscriptionProps) {
         }
     }
 
-    console.log("SERVER ACTION: ATIVAR PLANO ",type);
-
     return {
         session: 123,
     }
