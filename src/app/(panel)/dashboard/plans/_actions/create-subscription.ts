@@ -4,6 +4,7 @@ import { Plan } from '@/generated/prisma';
 import { auth } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { stripe } from '@/utils/stripe';
+import { revalidatePath } from 'next/cache';
 
 interface SubscriptionProps {
     type: Plan;
@@ -52,6 +53,8 @@ export async function createSubscription({type}: SubscriptionProps) {
         });
 
         customerId = stripeCostumer.id;
+
+        revalidatePath("/dashboard/plans");
     }
 
     //CRIA CHECKOUT
@@ -75,6 +78,8 @@ export async function createSubscription({type}: SubscriptionProps) {
             cancel_url: process.env.STRIPE_CANCEL_URL,
         })
 
+        revalidatePath("/dashboard/plans");
+        
         return {
             sessionId: stripeCheckoutSession.id,
             url: stripeCheckoutSession.url,
@@ -87,9 +92,5 @@ export async function createSubscription({type}: SubscriptionProps) {
             sessionId: "",
             error: "Falha ao ativar plano."
         }
-    }
-
-    return {
-        session: 123,
     }
 }

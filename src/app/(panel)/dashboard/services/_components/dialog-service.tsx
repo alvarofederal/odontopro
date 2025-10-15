@@ -116,7 +116,6 @@ export function DialogService({ closeModal, initialValues, serviceId }: DialogSe
 
     event.target.value = value;
     form.setValue("price", value)
-
   }
 
   return (
@@ -131,8 +130,7 @@ export function DialogService({ closeModal, initialValues, serviceId }: DialogSe
       <Form {...form}>
         <form
           className="space-y-2"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
+          onSubmit={form.handleSubmit(onSubmit)}>
 
           <div className="flex flex-col">
             <FormField
@@ -146,14 +144,11 @@ export function DialogService({ closeModal, initialValues, serviceId }: DialogSe
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="Digite o nome do serviço..."
-                    />
+                      placeholder="Digite o nome do serviço..." />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
-
+              )} />
 
             <FormField
               control={form.control}
@@ -167,13 +162,11 @@ export function DialogService({ closeModal, initialValues, serviceId }: DialogSe
                     <Input
                       {...field}
                       placeholder="Ex: 120,00"
-                      onChange={changeCurrency}
-                    />
+                      onChange={changeCurrency} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
+              )} />
           </div>
 
           <p className="font-semibold">Tempo de duração do serviço:</p>
@@ -196,8 +189,7 @@ export function DialogService({ closeModal, initialValues, serviceId }: DialogSe
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
+              )} />
 
             <FormField
               control={form.control}
@@ -217,8 +209,7 @@ export function DialogService({ closeModal, initialValues, serviceId }: DialogSe
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
+              )} />
           </div>
 
           <Button 

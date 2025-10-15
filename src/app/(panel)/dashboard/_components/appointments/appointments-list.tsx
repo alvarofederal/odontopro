@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card"
 import { useQuery, useQueryClient } from "@tanstack/react-query"

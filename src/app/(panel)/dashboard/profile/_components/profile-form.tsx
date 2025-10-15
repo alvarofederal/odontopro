@@ -11,9 +11,9 @@ interface UseProfileFormProps {
 }
 
 const profileSchema = z.object({
-  name: z.string().min(1, { message: "O nome é obrigatório" }),
-  address: z.string().optional(),
-  phone: z.string().optional(),
+  name: z.string().min(1, { message: "O nome é obrigatório" }).max(100, { message: "O nome deve ter no máximo 100 caracteres" }),
+  address: z.string().max(200, { message: "O endereço deve ter no máximo 200 caracteres" }).optional(),
+  phone: z.string().max(11, { message: "O telefone deve ter no máximo 11 caracteres" }).optional(),
   status: z.string(),
   timeZone: z.string().min(1, { message: "O time zone é obrigatório" }),
 })

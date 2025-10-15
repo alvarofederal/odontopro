@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 export const reminderFormSchema = z.object({
-    description: z.string().min(1, "A descrição do lembrete é obrigatória."),
+    description: z.string().min(1, "A descrição do lembrete é obrigatória.").max(255, "A descrição do lembrete deve ter no máximo 255 caracteres.")
 })
 
 export type ReminderFormData = z.infer<typeof reminderFormSchema>;

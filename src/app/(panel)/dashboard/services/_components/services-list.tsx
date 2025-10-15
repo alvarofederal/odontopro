@@ -1,26 +1,21 @@
 "use client"
+
 import { useState } from 'react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -54,10 +49,10 @@ export function ServicesList({ services, permission }: ServicesListProps) {
   }
 
   async function handleDeleteService(serviceId: string) {
-    const response = await deleteService({ serviceId: serviceId })
+    const respondse = await deleteService({ serviceId: serviceId })
 
-    if (response.error) {
-      toast.error(response.error)
+    if (respondse.error) {
+      toast.error(respondse.error)
       return;
     }
 
@@ -76,6 +71,7 @@ export function ServicesList({ services, permission }: ServicesListProps) {
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-xl md:text-2xl font-bold'>Serviços</CardTitle>
+
             {permission.hasPermission && (
               <DialogTrigger asChild>
                 <Button>
@@ -86,7 +82,7 @@ export function ServicesList({ services, permission }: ServicesListProps) {
 
             {!permission.hasPermission && (
               <Link href="/dashboard/plans" className='text-red-500' >
-                Limite de serviços excedido - Atualize seu plano
+                Criação de Serviços BLOQUEADO - Atualize seu plano
               </Link>
             )}
 
@@ -125,6 +121,17 @@ export function ServicesList({ services, permission }: ServicesListProps) {
                     <TableHead className="text-right font-bold">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
+
+                {servicesList.length === 0 && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-10">
+                        Nenhum serviço cadastrado.
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+                
                 {servicesList.map((service) => (
                   <TableBody>
                     <TableRow>
