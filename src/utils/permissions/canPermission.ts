@@ -3,15 +3,14 @@
 import { auth } from "@/lib/auth";
 import { PlansDetailInfo } from "./get-plans";
 import prisma from "@/lib/prisma";
+import { canCreateService } from "./canCreateService";
 
-// BASIC - PROFESSIONAL - EXPIRED - TRIAL < 3 DIAS
+export type PLAN_PROP = "BASIC" | "PROFESSIONAL" | "TRIAL" | "EXPIRED" ;
 
-export type PLAN_PROP = "BASIC" | "PROFESSIONAL" | "EXPIRED" | "TRIAL";
-
-interface ResultPermissionProp {
+export interface ResultPermissionProp {
     hasPermission: boolean;
     planId: PLAN_PROP;
-    expirado: boolean;
+    expired: boolean;
     plan: PlansDetailInfo | null;
 }
 
@@ -26,31 +25,26 @@ export async function canPermission({ type }: CanPlanPermissions): Promise<Resul
         return {
             hasPermission: false,
             planId: "EXPIRED",
-            expirado: true,
+            expired: true,
             plan: null
         }
     }
-    const subscription = prisma.subscription.findFirst({
+
+    const subscription = await prisma.subscription.findFirst({
         where: {
             userId: session?.user?.id,
         }
     });
 
     switch (type) {
-        case "services": 
-
-            return {
-                hasPermission: false,
-                planId: "EXPIRED",
-                expirado: true,
-                plan: null
-            }
-        
+        case "service": 
+            const permission = await canCreateService(subscription, session);
+            return permission;
         default:
             return {
                 hasPermission: false,
                 planId: "EXPIRED",
-                expirado: true,
+                expired: true,
                 plan: null
             }
     }
