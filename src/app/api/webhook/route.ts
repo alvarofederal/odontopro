@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { stripe } from '@/utils/stripe';
 import prisma from '@/lib/prisma';
 import Stripe from 'stripe';
+import { manageSubscription } from '@/utils/manage-subscription';
 
 
 export async function POST(request: Request) {
@@ -27,23 +28,23 @@ export async function POST(request: Request) {
             const payment = event.data.object as Stripe.Subscription;
             console.log("CANCELAMENTO DE ASSINATURA", payment);
             // Ir ao banco de dados e deletar a assinatura do usuário
-            /*await prisma.user.updateMany({
-                where: {
-                    stripeCustomerId: payment.customer, 
-                    subscriptionStatus: "ACTIVE"
-                },
-                data: {
-                    subscriptionStatus: "CANCELED",
-                    subscriptionPlan: "FREE",
-                    currentPeriodEnd: null,
-                    stripeSubscriptionId: null
-                }
-            });*/
+            await manageSubscription(
+                payment.id,
+                payment.customer.toString(),
+                false,
+                true
+            );
             break;
         case 'customer.subscription.updated': 
             const paymentIntent = event.data.object as Stripe.Subscription;
             console.log("ATUALIZAÇÃO DE ASSINATURA", paymentIntent);
             // Ir ao banco de dados e atualizar a assinatura do usuário
+            await manageSubscription(
+                paymentIntent.id,
+                paymentIntent.customer.toString(),
+                false,
+                true
+            );
 
             break;
         case 'checkout.session.completed': 
